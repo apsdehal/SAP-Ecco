@@ -16,25 +16,28 @@ function loadJSON(path, success, error) {
     xhr.send();
 }
 
-loadJSON('data.json', createEdgesElements);
-
-function getNodes() {
-
-  loadJSON('data-nodes.json', createNodeElements);
-}
+loadJSON('data.json', createElements);
 
 var edges, nodes;
 
-function createEdgesElements(data) {
-  edges = data;
-  getNodes();
-}
+function createElements(data) {
+  edges = data['links'];
 
-function createNodeElements(data) {
-  nodes = data;
+  edges = edges.map(function (x) {
+    x['weight'] = 1;
+    x['id'] = x['source'].toString() + '_' + x['target'].toString();
+
+    return {data: x};
+  });
+
+  nodes = data['nodes'];
+
+  nodes = nodes.map(function (x) {
+    return {data: x};
+  });
+
   startCyto();
 }
-
 
 function startCyto() {
 
