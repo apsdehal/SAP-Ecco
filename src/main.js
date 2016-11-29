@@ -147,8 +147,35 @@ function startCyto() {
     };
   }
 
+
+  function testValidNode(node) {
+    var currentNode = cy.getElementById(current);
+    var connectedEdges = currentNode.connectedEdges(function () {
+      return this.target().anySame(node)
+    });
+
+    return connectedEdges.length;
+  }
+
+  function testDestination(node) {
+    var finalNode = cy.getElementById(final);
+    return node.anySame(finalNode);
+  }
+
+  var self = window;
   cy.on('tap', 'node', function () {
     var nodes = this;
+
+    if (testValidNode(nodes) === 0) {
+      document.getElementById('message').textContent = 'This node is not a neighbor of current node ' + current;
+      return;
+    }
+
+    if (testDestination(nodes) == 1) {
+      document.getElementById('message').textContent = 'You have reached the destination';
+      return;
+    }
+
     cy.getElementById(current).removeClass('current');
     neighbors.uncolor();
 
@@ -158,6 +185,6 @@ function startCyto() {
     neighbors = colorNeighbors();
     this.removeClass('next');
     this.addClass('current');
-    console.log(current);
   });
+
 }
