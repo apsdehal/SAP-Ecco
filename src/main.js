@@ -72,13 +72,13 @@ function startCyto() {
           'label': 'data(id)',
           'width': 25,
           'height': 25,
-          'font-size': 25
+          'font-size': 20
         }
       },
       {
         selector: 'edge',
         style: {
-          'line-color': '#FF4C3B',
+          'line-color': '#0072BB',
           'width': 'mapData(weight, 3, 100, 1, 70)',
         }
       },
@@ -95,7 +95,7 @@ function startCyto() {
         selector: '.next',
         style: {
             'background-color': '#FF4C3B',
-            'line-color': '#61bffc',
+            'line-color': '#FF4C3B',
             'transition-property': 'background-color, line-color',
             'transition-duration': '0.5s'
         }
@@ -127,7 +127,8 @@ function startCyto() {
 
   function colorNeighbors() {
     var nodes = cy.getElementById(current);
-    var connectedEdges = nodes.connectedEdges();
+    var connectedEdges = nodes.connectedEdges().addClass('next');
+    connectedEdges.data('width', 100);
 
     var connectedNodes = connectedEdges.targets();
 
@@ -143,6 +144,7 @@ function startCyto() {
         connectedNodes.forEach(function (node) {
           node.removeClass('next');
         });
+        connectedEdges.removeClass('next');
       }
     };
   }
@@ -162,17 +164,26 @@ function startCyto() {
     return node.anySame(finalNode);
   }
 
-  var self = window;
   cy.on('tap', 'node', function () {
     var nodes = this;
 
     if (testValidNode(nodes) === 0) {
-      document.getElementById('message').textContent = 'This node is not a neighbor of current node ' + current;
+      var message = document.getElementById('message');
+      message.style.visibility = 'visible';
+      message.textContent = '';
+      window.setTimeout(function () {
+        message.textContent = 'This node is not a neighbor of current node ' + current;
+      }, 1000);
       return;
     }
 
     if (testDestination(nodes) == 1) {
-      document.getElementById('message').textContent = 'You have reached the destination';
+      var message = document.getElementById('message');
+      message.style.visibility = 'visible';
+      message.textContent = '';
+      window.setTimeout(function () {
+        message.textContent = 'You have reached the destination';
+      }, 1000);
       return;
     }
 
