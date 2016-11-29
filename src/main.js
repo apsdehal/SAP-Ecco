@@ -125,6 +125,8 @@ function startCyto() {
   cy.getElementById(start).removeClass('next').addClass('current');
 
 
+  var turn = 0; // 0 = Player, 1 = adversary
+
   function colorNeighbors() {
     var nodes = cy.getElementById(current);
     var connectedEdges = nodes.connectedEdges().addClass('next');
@@ -167,6 +169,16 @@ function startCyto() {
   cy.on('tap', 'node', function () {
     var nodes = this;
 
+    if (turn === 1) {
+      var message = document.getElementById('message');
+      message.style.visibility = 'visible';
+      message.textContent = '';
+      window.setTimeout(function () {
+        message.textContent = 'Adversary turn';
+      }, 1000);
+      return;
+    }
+
     if (testValidNode(nodes) === 0) {
       var message = document.getElementById('message');
       message.style.visibility = 'visible';
@@ -196,6 +208,13 @@ function startCyto() {
     neighbors = colorNeighbors();
     this.removeClass('next');
     this.addClass('current');
+  });
+
+  cy.on('mouseover', 'edge', function(event) {
+    var edge = this;
+    var edgedetail = document.getElementById('edgedetail');
+    edgedetail.style.visibility = 'visible';
+    edgedetail.innerHTML = 'Edge from ' + this.data('source') + ' to ' + this.data('target') + '<br/>Weight: ' + this.data('weight');
   });
 
 }
