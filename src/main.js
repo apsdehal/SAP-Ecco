@@ -79,7 +79,7 @@ function startCyto() {
         selector: 'edge',
         style: {
           'line-color': '#0072BB',
-          'width': 'mapData(weight, 3, 100, 1, 70)',
+          'width': '1',
         }
       },
       {
@@ -179,6 +179,7 @@ function startCyto() {
       return;
     }
 
+
     if (testValidNode(nodes) === 0) {
       var message = document.getElementById('message');
       message.style.visibility = 'visible';
@@ -199,6 +200,8 @@ function startCyto() {
       return;
     }
 
+    turn = 1;
+
     cy.getElementById(current).removeClass('current');
     neighbors.uncolor();
 
@@ -209,6 +212,50 @@ function startCyto() {
     this.removeClass('next');
     this.addClass('current');
   });
+
+  cy.on('tap', 'edge', function (event) {
+    var edge = this;
+
+    if (turn === 0) {
+      var message = document.getElementById('message');
+      message.style.visibility = 'visible';
+      message.textContent = '';
+      window.setTimeout(function () {
+        message.textContent = 'Player turn';
+      }, 1000);
+      return;
+    }
+
+    turn = 0;
+    var wt = edge.data('weight');
+
+    var src = edge.data('source');
+    var target = edge.data('target');
+
+    var revEdge = cy.getElementById(target + '_' + src);
+    revEdge.data('weight', wt * 2);
+
+    edge.data('weight', wt * 2);
+    var message = document.getElementById('message');
+    message.style.visibility = 'visible';
+    message.textContent = '';
+
+    edge.style('width', wt * 2);
+    revEdge.style('width', wt * 2);
+
+    var inter = window.setInterval(function () {
+      edge.toggleClass('next');
+    }, 1000);
+
+    window.setTimeout(function () {
+      window.clearInterval(inter);
+    }, 6000);
+
+    window.setTimeout(function () {
+      message.textContent = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
+    }, 1000);
+
+  })
 
   cy.on('mouseover', 'edge', function(event) {
     var edge = this;
