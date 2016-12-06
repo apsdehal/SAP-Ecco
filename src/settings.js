@@ -29,7 +29,7 @@ let settings = {
       selector: 'edge',
       style: {
         'line-color': edgeLineColor,
-        'width': '1',
+        'width': 'mapData(weight, 1, 100, 1, 10)',
       }
     },
     {

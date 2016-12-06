@@ -59,16 +59,18 @@ class Utils {
 
   alertMessage(type, msg) {
     let msgDiv = document.getElementById('message');
-    msgDiv.className = 'slider';
-    msgDiv.style.visibility = 'visible';
-    msgDiv.classList.add('alert');
-    msgDiv.classList.add('alert-' + type);
-    msgDiv.textContent = msg;
+    let newDiv = document.createElement('div');
+    newDiv.className = 'slider';
+    newDiv.style.visibility = 'visible';
+    newDiv.classList.add('alert');
+    newDiv.classList.add('alert-' + type);
+    newDiv.textContent = msg;
 
-    window.clearTimeout(this.timeout);
+    msgDiv.appendChild(newDiv);
 
     this.timeout = window.setTimeout(() => {
-      msgDiv.classList.add('closed');
+      newDiv.classList.add('closed');
+      msgDiv.removeChild(newDiv);
     }, this.timeoutDuration);
   }
 }

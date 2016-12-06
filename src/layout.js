@@ -16,6 +16,7 @@ class Layout {
     this.turn = 0; // 0 = Player, 1 = adversary
     this.playerType = player.HUMAN;
     this.settings = settings;
+    this.version = 0;
   }
 
   initialize(edges, nodes) {
@@ -45,8 +46,20 @@ class Layout {
   }
 
   setupGameWithAI() {
-    this.setNodeTapListener(this.getAdversaryMoveByAI);
+    if (this.version === 0) {
+      this.setNodeTapListener(this.getAdversaryMoveByAI);
+    } else {
+      this.getPlayerMoveByAI(this.start);
+      this.setEdgeTapListener(this.getPlayerMoveByAI);
+    }
     this.setMouseoverListener();
+  }
+
+  alternateRoles() {
+    this.version = !this.version;
+    utils.alertMessage('info', 'Roles will change now. You are ' + (this.version ? 'adversary' : 'player'));
+
+    this.initialize(this.settings.elements.edges, this.settings.elements.nodes);
   }
 
   setMouseoverListener() {
@@ -80,22 +93,24 @@ class Layout {
         return;
       }
 
-      that.turn = 1;
-
-      that.cy.getElementById(that.current).removeClass('current');
-      that.neighbors.uncolor();
-
-      this.removeClass('next');
-      that.current = this.data('id');
-
-      that.neighbors = that.colorNeighbors();
-      this.removeClass('next');
-      this.addClass('current');
+      that.colorCurrentNode(nodes);
 
       if (that.playerType === player.AI) {
         cb.call(that, that.current);
       }
     });
+  }
+
+  getPlayerMoveByAI(playerPosition) {
+    let move = ai.playerMove(playerPosition);
+    const node = this.cy.getElementById(move.toString());
+
+    if (this.testDestination(node)) {
+      utils.alertMessage('success', 'AI has reached destination');
+      return;
+    }
+
+    this.colorCurrentNode(node);
   }
 
   getAdversaryMoveByAI(playerPosition) {
@@ -107,7 +122,7 @@ class Layout {
     this.turn = 0;
   }
 
-  setEdgeTapListener() {
+  setEdgeTapListener(cb) {
     let that = this;
     this.cy.on('tap', 'edge', function (event) {
       var edge = this;
@@ -118,8 +133,27 @@ class Layout {
       }
 
       that.turn = 0;
-      that.doubleEdge(edge);
+      that.doubleEdge.call(that, edge);
+
+      if (that.playerType === player.AI) {
+        cb.call(that, that.current, edge);
+      }
     });
+  }
+
+  colorCurrentNode(node) {
+    this.turn = 1;
+
+    this.cy.getElementById(this.current).removeClass('current');
+    this.neighbors.uncolor();
+
+    node.removeClass('next');
+    this.current = node.data('id');
+
+    this.neighbors = this.colorNeighbors();
+    node.removeClass('next');
+    node.addClass('current');
+    utils.alertMessage('success', 'Player moved to ' + this.current);
   }
 
   doubleEdge(edge) {
@@ -136,12 +170,13 @@ class Layout {
     edge.style('width', wt * 2);
     revEdge.style('width', wt * 2);
 
-    var inter = window.setInterval(function () {
+    window.clearInterval(this.inter);
+    this.inter = window.setInterval(function () {
       edge.toggleClass('next');
     }, 1000);
 
     window.setTimeout(function () {
-      window.clearInterval(inter);
+      window.clearInterval(this.inter);
     }, 6000);
 
     let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');

@@ -22,12 +22,11 @@ class AI {
     }
   }
 
-  playerMove(edge,playerPosition) {
+  playerMove(playerPosition, edge) {
     // Data is same as above
     // return single integer where you want player ai to move
     this.playerPosition = playerPosition;
     let finalPos;
-    let graph = this.getGraph(edges);
 
     // Your logic here
     let path = this.dijkistra(edge);
