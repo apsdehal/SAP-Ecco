@@ -29,7 +29,7 @@ class AI {
     let graph = this.getGraph(edges);
 
     // Your logic here
-    let path = this.dijkistra(edge);
+    let path = this.dijkistra(edge,playerPosition);
     finalPos = path[1];
 
     return finalPos;
@@ -50,7 +50,7 @@ class AI {
     return {selectedSource, selectedTarget};
   }
 
-  dijkistra(edge) {
+  dijkistra(edge,playerPosition) {
     this.g[edge.data.source][edge.data.target] = edge.data.weight;
     this.g[edge.data.target][edge.data.source] = edge.data.weight;
     const route = new Graph(this.g);
