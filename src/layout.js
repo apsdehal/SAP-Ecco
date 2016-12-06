@@ -21,15 +21,11 @@ class Layout {
     this.playerTwoScore = 0;
   }
 
-  initialize(edges, nodes, reset) {
+  initialize(edges, nodes) {
     this.elements = {edges, nodes};
     settings.elements = JSON.parse(JSON.stringify(this.elements));
     this.cy = cytoscape(settings);
     this.final = options.destination;
-
-    if (reset) {
-      this.version = 0;
-    }
 
     this.playerType = options.currentPlayer;
     this.completed = false;
@@ -52,6 +48,9 @@ class Layout {
     }
   }
 
+  setVersion(ver) {
+    this.version = ver;
+  }
   setupGameWithPlayer() {
     this.setNodeTapListener();
     this.setEdgeTapListener();
