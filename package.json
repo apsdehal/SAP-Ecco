@@ -9,6 +9,7 @@
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-preset-es2015": "^6.3.13",
     "cytoscape": "^2.7.12",
+    "node-dijkstra": "^2.3.0",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.1"
   },

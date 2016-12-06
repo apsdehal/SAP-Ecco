@@ -1,15 +1,36 @@
+const Graph = require('node-dijkstra');
 class AI {
   constructor(start, end) {
     this.playerPosition = start;
     this.destination = end;
+    this.g = {};
   }
 
-  playerMove(edges, nodes, playerPosition) {
+  initiaizeGraph(edges,nodes){
+    for(i=0; i<edges.length; i++){
+      let target = edges[i].data.target;
+      let source = edges[i].data.source;
+
+      if (!this.g[source]) {
+        this.g[source] = {};
+      }
+      if (!this.g[target]) {
+        this.g[target] = {};
+      }
+      this.g[source][target] = edges[i].data.weight;
+      this.g[target][source] = edges[i].data.weight;
+    }
+  }
+
+  playerMove(edge,playerPosition) {
     // Data is same as above
     // return single integer where you want player ai to move
     let finalPos;
+    let graph = this.getGraph(edges);
 
     // Your logic here
+    let path = this.dijkistra(edge);
+    finalPos = path[1];
 
     return finalPos;
   }
@@ -29,8 +50,12 @@ class AI {
     return {selectedSource, selectedTarget};
   }
 
-  dijkistra() {
-
+  dijkistra(edge) {
+    this.g[edge.data.source][edge.data.target] = edge.data.weight;
+    this.g[edge.data.target][edge.data.source] = edge.data.weight;
+    const route = new Graph(this.g);
+    let path = route.path(playerPosition,this.destination);
+    return path;
   }
 }
 
