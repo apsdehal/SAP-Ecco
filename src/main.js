@@ -1,3 +1,5 @@
+import cytoscape from 'cytoscape';
+
 function loadJSON(path, success, error) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function()
@@ -32,7 +34,7 @@ function createElements(data) {
     return {data: x};
   });
 
-  edgesReverse = edges.map(function (data) {
+  var edgesReverse = edges.map(function (data) {
     var x = {};
     x['source'] = data.data['target'];
     x['target'] = data.data['source'];
