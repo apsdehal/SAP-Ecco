@@ -50,6 +50,7 @@ class Layout {
 
   setVersion(ver) {
     this.version = ver;
+    this.turn = ver;
   }
   setupGameWithPlayer() {
     this.setNodeTapListener();
