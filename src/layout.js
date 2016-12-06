@@ -14,7 +14,7 @@ class Layout {
     this.turn = 0; // 0 = Player, 1 = adversary
   }
 
-  initialize(edges, nodes) {
+  initialize(edges, nodes, options) {
     settings.elements = {edges, nodes};
     this.cy = cytoscape(settings);
 

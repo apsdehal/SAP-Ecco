@@ -50,6 +50,23 @@
 </head>
 <body>
   <div id="container"></div>
+  <div id="options">
+    <div>
+      Graph size
+      <div id="graph-size-options" class="btn-group" role="group">
+        <button type="button" class="btn btn-default" data-type="SMALL_GRAPH">Small</button>
+        <button type="button" class="btn btn-default" data-type="MEDIUM_GRAPH">Medium</button>
+        <button type="button" class="btn btn-primary" data-type="LARGE_GRAPH">Large</button>
+      </div>
+    </div>
+    <div>
+      Player 2 Type
+      <div id="player-type-options" class="btn-group" role="group">
+        <button type="button" class="btn btn-default" data-type="HUMAN">Human</button>
+        <button type="button" class="btn btn-primary" data-type="AI">AI</button>
+      </div>
+    </div>
+</div>
   <div id="edgedetail" role="alert" class="bs-callout bs-callout-info"></div>
   <div id="message" role="slider closed alert"></div>
   <script src="./build/main.min.js">

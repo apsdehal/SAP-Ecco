@@ -1,4 +1,20 @@
 const { utils } = require('./utils').default;
 let { layout } = require('./layout');
+let { options } = require('./options');
 
-utils.loadJSON('data.json', utils.createElements, null, layout.initialize.bind(layout));
+function main(options) {
+  utils.loadJSON(
+    options.currentGraph,
+    utils.createElements,
+    null,
+    (function () {
+      var args = Array.prototype.slice.call(arguments);
+      args.push(options);
+      layout.initialize.apply(layout, args);
+    })
+  );
+}
+
+main(options);
+
+options.setListeners(main);
