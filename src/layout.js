@@ -17,16 +17,24 @@ class Layout {
     this.playerType = player.HUMAN;
     this.elements = {};
     this.version = 0;
+    this.playerOneScore = 0;
+    this.playerTwoScore = 0;
   }
 
   initialize(edges, nodes) {
     this.elements = {edges, nodes};
     settings.elements = JSON.parse(JSON.stringify(this.elements));
     this.cy = cytoscape(settings);
-
-    ai.initializeGraph(edges, nodes);
+    this.final = options.destination;
 
     this.playerType = options.currentPlayer;
+    this.completed = false;
+
+    if (this.playerType === player.AI) {
+      ai.initializeGraph(edges, nodes);
+      ai.setDestination(this.final);
+    }
+
     this.current = this.start;
     this.cy.getElementById(this.final).addClass('destination');
 
@@ -58,6 +66,7 @@ class Layout {
 
   alternateRoles() {
     this.version = !this.version;
+
     utils.alertMessage('info', 'Roles will change now. You are ' + (this.version ? 'adversary' : 'player'));
 
     this.initialize(this.elements.edges, this.elements.nodes);
@@ -77,6 +86,10 @@ class Layout {
     this.cy.on('tap', 'node', function () {
       var nodes = this;
 
+      if (that.completed) {
+        utils.alertMessage('danger', 'Game completed, use reset');
+      }
+
       if (that.turn === 1) {
         utils.alertMessage('danger', 'Adversary turn')
         return;
@@ -88,7 +101,13 @@ class Layout {
         return;
       }
 
+      that.setPlayerScore.call(that, nodes);
+
       if (that.testDestination(nodes) == 1) {
+        if (that.version === 1) {
+          that.showWinner,call(that);
+          return;
+        }
         utils.alertMessage('success', 'You have reached destination');
         that.alternateRoles();
         return;
@@ -102,11 +121,31 @@ class Layout {
     });
   }
 
+  setPlayerScore(node) {
+    let curr = this.cy.getElementById(this.current);
+    let edge = curr.connectedEdges(function () {
+      return this.target().anySame(node)
+    });
+
+    edge = edge[0];
+
+    if (this.version === 0) {
+      this.playerOneScore += parseInt(edge.data('weight'), 10);
+    } else {
+      this.playerTwoScore += parseInt(edge.data('weight'), 10);
+    }
+  }
+
   getPlayerMoveByAI(playerPosition) {
     let move = ai.playerMove(playerPosition);
     const node = this.cy.getElementById(move.toString());
 
+    this.setPlayerScore(node);
+
     if (this.testDestination(node)) {
+      if (this.version === 1) {
+        this.showWinner();
+      }
       utils.alertMessage('success', 'AI has reached destination');
       return;
     }
@@ -123,10 +162,25 @@ class Layout {
     this.turn = 0;
   }
 
+  showWinner() {
+    this.completed = true;
+    const winner =
+    (this.playerOneScore > this.playerTwoScore ?
+      "Player 1" :
+      ("Player 2" + (this.playerType === player['AI'] ? "(AI)" : "")));
+    utils.alertMessage('info', 'Player 1 score: ' + this.playerOneScore);
+    utils.alertMessage('info', 'Player 2 score: ' + this.playerTwoScore);
+    utils.alertMessage('success', 'Winner is:' + winner);
+  }
+
   setEdgeTapListener(cb) {
     let that = this;
     this.cy.on('tap', 'edge', function (event) {
       var edge = this;
+
+      if (that.completed) {
+        utils.alertMessage('danger', 'Game completed, use reset');
+      }
 
       if (that.turn === 0) {
         utils.alertMessage('danger', 'Player Turn');
@@ -176,8 +230,9 @@ class Layout {
       edge.toggleClass('next');
     }, 1000);
 
+    var that = this;
     window.setTimeout(function () {
-      window.clearInterval(this.inter);
+      window.clearInterval(that.inter);
     }, 6000);
 
     let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
@@ -210,7 +265,7 @@ class Layout {
   }
 
   testDestination(node) {
-    const finalNode = this.cy.getElementById(final);
+    const finalNode = this.cy.getElementById(this.final);
     return node.anySame(finalNode);
   }
 

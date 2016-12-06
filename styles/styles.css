@@ -25,17 +25,17 @@ body {
 
 #options {
   position: absolute;
-  top: 15%;
+  top: 12%;
   right: 0;
 }
 
 #options > div {
-  margin: 20px 0;
+  margin: 10px 0;
   text-align: right;
 }
 
 #options .label {
-  padding: 10px 0;
+  padding: 5px 0;
   text-align: center;
 }
 
@@ -55,4 +55,8 @@ body {
   left: 0;
   margin: 0 auto;
   font-size: 18px;
+}
+
+.reload {
+  font-family: Lucida Sans Unicode
 }

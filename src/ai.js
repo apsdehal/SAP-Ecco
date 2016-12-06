@@ -7,6 +7,7 @@ class AI {
   }
 
   initializeGraph(edges,nodes){
+    this.g = {};
     for(let i = 0; i < edges.length; i++){
       let target = edges[i].data.target;
       let source = edges[i].data.source;
@@ -20,6 +21,10 @@ class AI {
       this.g[source][target] = edges[i].data.weight;
       this.g[target][source] = edges[i].data.weight;
     }
+  }
+
+  setDestination(dest) {
+    this.destination = dest;
   }
 
   playerMove(playerPosition, edge) {
@@ -65,5 +70,5 @@ class AI {
   }
 }
 
-let ai = new AI('0', '50');
+let ai = new AI('1', '50');
 export {ai};
