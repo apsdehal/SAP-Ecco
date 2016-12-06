@@ -24,9 +24,16 @@ body {
 }
 
 
-#options {
+
+#options-container {
   position: absolute;
-  top: 12%;
+  right: 0;
+  overflow: auto;
+  height: 100%;
+}
+#options {
+  position: relative;
+  margin-top: 80%;
   right: 0;
 }
 
@@ -41,9 +48,8 @@ body {
 }
 
 #edgedetail {
-  position: absolute;
+  position: relative;
   right: 0px;
-  top: 50%;
   width: 200px;
   padding-left: 10px;
   box-shadow: 1px 1px 1px 1px;
@@ -58,6 +64,23 @@ body {
   font-size: 18px;
 }
 
+#player-type-options {
+  margin-bottom: 50px;
+}
+#helpChild ul {
+  margin: 0;
+  padding-left:
+}
+#helpChild ul {
+  list-style-type: none;
+}
+#helpChild ul > li {
+  text-indent: -5px;
+}
+#helpChild ul > li:before {
+  content: "-";
+  text-indent: -5px;
+}
 .reload {
   font-family: Lucida Sans Unicode
 }

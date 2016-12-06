@@ -81,10 +81,20 @@ class Options {
       ' left: 0; right: 0; bottom: 0; width: 100%; display: flex;' +
       'justify-content: center; align-items: center';
 
-      helperChildDiv.classList.add('bs-callout');
-      helperChildDiv.classList.add('bs-callout-info'); 
 
-      helperChildDiv.style.cssText = 'z-index: 3; width: 30%; height: 300px;' +
+      helperChildDiv.classList.add('bs-callout');
+      helperChildDiv.classList.add('bs-callout-info');
+
+      helperChildDiv.innerHTML = '<h4>Instructions:</h4>' +
+        '<p>- Player\'s current position is displayed as "Green" and destination as "Yellow".</p>' +
+        '<p>- In each turn Player can move to any connecting node, represented by "Red".</p>' +
+        '<p>- Player\'s goal is to reach destination by travelling minimum cost path.</p>' +
+        '<p>- In each turn Adversary can double the cost of any edge.</p>' +
+        '<p>- Hover over an edge to display its current cost.</p>' +
+        '<p>In each game you play two roles, first as "player" then as "adversary".' + 'Whoever uses smaller cost path from source to destination is the winner.</p>' +
+        '<p>Click outside of box to close</p>'
+
+      helperChildDiv.style.cssText = 'z-index: 3; width: 600px; height: 300px;' +
       'background-color: rgb(256, 256, 256);';
 
       helperDiv.appendChild(helperChildDiv);
