@@ -25,17 +25,18 @@ class AI {
   playerMove(edge,playerPosition) {
     // Data is same as above
     // return single integer where you want player ai to move
+    this.playerPosition = playerPosition;
     let finalPos;
     let graph = this.getGraph(edges);
 
     // Your logic here
-    let path = this.dijkistra(edge,playerPosition);
+    let path = this.dijkistra(edge);
     finalPos = path[1];
 
     return finalPos;
   }
 
-  adversaryMove(edges, nodes, playerPosition) {
+  adversaryMove(playerPosition) {
     //edges is an array, whose each element is an object whose data attribute is the actual edge
     // Edge contains source, target, width
     // So to get 1st edge's weight from edges array we will do edges[0]['data'].weight
@@ -46,15 +47,21 @@ class AI {
     let selectedSource, selectedTarget;
 
     // Logic here
-    
+    this.playerPosition = playerPosition;
+    let path = dijkistra();
+    selectedSource = path[path.length-2];
+    selectedTarget = path[path.length-1];
     return {selectedSource, selectedTarget};
   }
 
-  dijkistra(edge,playerPosition) {
-    this.g[edge.data.source][edge.data.target] = edge.data.weight;
-    this.g[edge.data.target][edge.data.source] = edge.data.weight;
+  dijkistra(edge) {
+    if (edge) {
+      this.g[edge.data.source][edge.data.target] = edge.data.weight;
+      this.g[edge.data.target][edge.data.source] = edge.data.weight;      
+    }
+
     const route = new Graph(this.g);
-    let path = route.path(playerPosition,this.destination);
+    let path = route.path(this.playerPosition,this.destination);
     return path;
   }
 }
