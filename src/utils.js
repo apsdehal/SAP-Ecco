@@ -17,12 +17,12 @@ class Utils {
             }
         }
     };
-    xhr.open("GET", path, true);
+    xhr.open('GET', path, true);
     xhr.send();
   }
 
   createElements(data, cb) {
-    var edges, nodes;
+    let edges, nodes;
 
     edges = data['links'];
 
@@ -35,8 +35,8 @@ class Utils {
       return {data: x};
     });
 
-    var edgesReverse = edges.map((data) => {
-      var x = {};
+    let edgesReverse = edges.map((data) => {
+      let x = {};
       x['source'] = data.data['target'];
       x['target'] = data.data['source'];
       x['weight'] = 1;

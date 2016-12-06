@@ -1,5 +1,5 @@
-var fs = require('fs');
+let fs = require('fs');
 
-var data = fs.readFileSync('data.json');
-var k = JSON.parse(data);
+let data = fs.readFileSync('data.json');
+let k = JSON.parse(data);
 console.log(k.length);

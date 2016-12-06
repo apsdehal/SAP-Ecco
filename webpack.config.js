@@ -1,11 +1,11 @@
-var debug = process.env.NODE_ENV !== "production";
-var webpack = require('webpack');
-var path = require('path');
+let debug = process.env.NODE_ENV !== 'production';
+let webpack = require('webpack');
+let path = require('path');
 
 module.exports = {
   context: __dirname,
-  devtool: debug ? "inline-sourcemap" : null,
-  entry: "./src/main.js",
+  devtool: debug ? 'inline-sourcemap' : null,
+  entry: './src/main.js',
   module: {
     loaders: [
       {

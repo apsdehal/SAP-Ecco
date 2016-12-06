@@ -77,18 +77,20 @@ class Layout {
   }
 
   setMouseoverListener() {
-    this.cy.on('mouseover', 'edge', function(event) {
-      var edge = this;
-      var edgedetail = document.getElementById('edgedetail');
+    this.cy.on('mouseover', 'edge', function (event) {
+      let edge = this;
+      let edgedetail = document.getElementById('edgedetail');
       edgedetail.style.visibility = 'visible';
-      edgedetail.innerHTML = '<h4>Weight: ' + this.data('weight') + '</h4>Edge from ' + this.data('source') + ' to ' + this.data('target');
+      edgedetail.innerHTML = '<h4>Weight: ' + this.data('weight')
+      + '</h4>Edge from ' + this.data('source') + ' to '
+      + this.data('target');
     });
   }
 
   setNodeTapListener(cb) {
-    var that = this;
+    let that = this;
     this.cy.on('tap', 'node', function () {
-      var nodes = this;
+      let nodes = this;
 
       if (that.completed) {
         utils.alertMessage('danger', 'Game completed, use reset');
@@ -170,11 +172,11 @@ class Layout {
     this.completed = true;
     let winner =
     (this.playerOneScore < this.playerTwoScore ?
-      "Player 1" :
-      ("Player 2" + (this.playerType === player['AI'] ? "(AI)" : "")));
+      'Player 1' :
+      ('Player 2' + (this.playerType === player['AI'] ? '(AI)' : '')));
 
     if (this.playerOneScore === this.playerTwoScore) {
-      winner = "It is a tie";
+      winner = 'It is a tie';
     }
     utils.alertMessage('info', 'Player 1 score: ' + this.playerOneScore);
     utils.alertMessage('info', 'Player 2 score: ' + this.playerTwoScore);
@@ -184,7 +186,7 @@ class Layout {
   setEdgeTapListener(cb) {
     let that = this;
     this.cy.on('tap', 'edge', function (event) {
-      var edge = this;
+      let edge = this;
 
       if (that.completed) {
         utils.alertMessage('danger', 'Game completed, use reset');
@@ -220,12 +222,12 @@ class Layout {
   }
 
   doubleEdge(edge) {
-    var wt = edge.data('weight');
+    let wt = edge.data('weight');
 
-    var src = edge.data('source');
-    var target = edge.data('target');
+    let src = edge.data('source');
+    let target = edge.data('target');
 
-    var revEdge = this.cy.getElementById(target + '_' + src);
+    let revEdge = this.cy.getElementById(target + '_' + src);
     revEdge.data('weight', wt * 2);
 
     edge.data('weight', wt * 2);
@@ -238,22 +240,23 @@ class Layout {
       edge.toggleClass('next');
     }, 1000);
 
-    var that = this;
+    let that = this;
     window.setTimeout(function () {
       window.clearInterval(that.inter);
     }, 6000);
 
-    let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
+    let msg = 'Adversary doubled edge ' + edge.data('source')
+    + ' ' + edge.data('target') + ' to ' + edge.data('weight');
 
     utils.alertMessage('success', msg);
   }
 
   colorNeighbors() {
-    var nodes = this.cy.getElementById(this.current);
-    var connectedEdges = nodes.connectedEdges().addClass('next');
+    let nodes = this.cy.getElementById(this.current);
+    let connectedEdges = nodes.connectedEdges().addClass('next');
     connectedEdges.data('width', 100);
 
-    var connectedNodes = connectedEdges.targets();
+    let connectedNodes = connectedEdges.targets();
 
     Array.prototype.push(connectedNodes, connectedEdges.sources());
 
@@ -278,8 +281,8 @@ class Layout {
   }
 
   testValidNode(node) {
-    var currentNode = this.cy.getElementById(this.current);
-    var connectedEdges = currentNode.connectedEdges(function () {
+    let currentNode = this.cy.getElementById(this.current);
+    let connectedEdges = currentNode.connectedEdges(function () {
       return this.target().anySame(node)
     });
 

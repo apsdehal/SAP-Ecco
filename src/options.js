@@ -1,18 +1,18 @@
 const player = {
-  AI: "ai",
-  HUMAN: "human"
+  AI: 'ai',
+  HUMAN: 'human'
 };
 
 const graph = {
-  LARGE_GRAPH: "large_graph.json",
-  MEDIUM_GRAPH: "medium_graph.json",
-  SMALL_GRAPH: "small_graph.json"
+  LARGE_GRAPH: 'large_graph.json',
+  MEDIUM_GRAPH: 'medium_graph.json',
+  SMALL_GRAPH: 'small_graph.json'
 };
 
 const final = {
-  LARGE_GRAPH: "80",
-  MEDIUM_GRAPH: "40",
-  SMALL_GRAPH: "20"
+  LARGE_GRAPH: '80',
+  MEDIUM_GRAPH: '40',
+  SMALL_GRAPH: '20'
 };
 
 const { utils } = require('./utils').default;
@@ -33,7 +33,7 @@ class Options {
   setPlayerTypeListener(cb) {
     const playerBtnGroup = document.getElementById('player-type-options');
     let that = this;
-    playerBtnGroup.addEventListener('click', function(e) {
+    playerBtnGroup.addEventListener('click', function (e) {
       that.currentPlayer = player[e.target.getAttribute('data-type')];
       that.setClasses.call(that, e, cb);
     });
@@ -42,7 +42,7 @@ class Options {
   setGraphTypeListener(cb) {
     const graphBtnGroup = document.getElementById('graph-size-options');
     let that = this;
-    graphBtnGroup.addEventListener('click', function(e) {
+    graphBtnGroup.addEventListener('click', function (e) {
       that.currentGraph = graph[e.target.getAttribute('data-type')];
       that.destination = final[e.target.getAttribute('data-type')];
       that.setClasses.call(that, e, cb);
@@ -52,7 +52,7 @@ class Options {
   setResetListener(cb) {
     const resetBtn = document.getElementById('reset');
     let that = this;
-    resetBtn.addEventListener('click', function(e) {
+    resetBtn.addEventListener('click', function (e) {
       utils.alertMessage('info', 'Resetting');
       cb(that, true);
     })
