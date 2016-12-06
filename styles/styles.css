@@ -3,10 +3,11 @@ body {
 }
 #container {
   position: absolute;
-  width: 100%;
+  width: 60%;
   height: 90%;
   top: 5%;
-  /*margin: 0 auto;*/
+  left: 20%;
+  margin: 0 auto;
 }
 
 .slider {

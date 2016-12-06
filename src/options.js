@@ -19,9 +19,9 @@ const { utils } = require('./utils').default;
 
 class Options {
   constructor() {
-    this.currentGraph = graph['LARGE_GRAPH'];
+    this.currentGraph = graph['SMALL_GRAPH'];
     this.currentPlayer = player['AI'];
-    this.destination = final['LARGE_GRAPH'];
+    this.destination = final['SMALL_GRAPH'];
   }
 
   setListeners(cb) {
@@ -54,7 +54,7 @@ class Options {
     let that = this;
     resetBtn.addEventListener('click', function(e) {
       utils.alertMessage('info', 'Resetting');
-      cb(that);
+      cb(that, true);
     })
   }
 

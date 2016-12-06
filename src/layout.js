@@ -21,11 +21,15 @@ class Layout {
     this.playerTwoScore = 0;
   }
 
-  initialize(edges, nodes) {
+  initialize(edges, nodes, reset) {
     this.elements = {edges, nodes};
     settings.elements = JSON.parse(JSON.stringify(this.elements));
     this.cy = cytoscape(settings);
     this.final = options.destination;
+
+    if (reset) {
+      this.version = 0;
+    }
 
     this.playerType = options.currentPlayer;
     this.completed = false;
@@ -143,7 +147,7 @@ class Layout {
     this.setPlayerScore(node);
 
     if (this.testDestination(node)) {
-      if (this.version === 1) {
+      if (this.version) {
         this.showWinner();
       }
       utils.alertMessage('success', 'AI has reached destination');
@@ -164,13 +168,17 @@ class Layout {
 
   showWinner() {
     this.completed = true;
-    const winner =
-    (this.playerOneScore > this.playerTwoScore ?
+    let winner =
+    (this.playerOneScore < this.playerTwoScore ?
       "Player 1" :
       ("Player 2" + (this.playerType === player['AI'] ? "(AI)" : "")));
+
+    if (this.playerOneScore === this.playerTwoScore) {
+      winner = "It is a tie";
+    }
     utils.alertMessage('info', 'Player 1 score: ' + this.playerOneScore);
     utils.alertMessage('info', 'Player 2 score: ' + this.playerTwoScore);
-    utils.alertMessage('success', 'Winner is:' + winner);
+    utils.alertMessage('warning', 'Winner is: ' + winner);
   }
 
   setEdgeTapListener(cb) {
