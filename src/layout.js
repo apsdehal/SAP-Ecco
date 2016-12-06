@@ -1,6 +1,8 @@
 let { settings } = require('./settings');
 import cytoscape from 'cytoscape';
 const { utils } = require('./utils').default;
+const { options, player, graph } = require('./options');
+const { ai } = require('./ai');
 
 const start = '1';
 const final = '50';
@@ -12,95 +14,139 @@ class Layout {
     this.start = st || start;
     this.final = fi || final;
     this.turn = 0; // 0 = Player, 1 = adversary
+    this.playerType = player.HUMAN;
+    this.settings = settings;
   }
 
-  initialize(edges, nodes, options) {
-    settings.elements = {edges, nodes};
-    this.cy = cytoscape(settings);
+  initialize(edges, nodes) {
+    this.settings.elements = {edges, nodes};
+    this.cy = cytoscape(this.settings);
 
+    ai.initializeGraph(edges, nodes);
+
+    this.playerType = options.currentPlayer;
     this.current = this.start;
     this.cy.getElementById(this.final).addClass('destination');
 
-    var neighbors = this.colorNeighbors();
+    this.neighbors = this.colorNeighbors();
     this.cy.getElementById(this.start).removeClass('next').addClass('current');
 
-    let that = this;
+    if (this.playerType === player.HUMAN) {
+      this.setupGameWithPlayer();
+    } else {
+      this.setupGameWithAI();
+    }
+  }
 
+  setupGameWithPlayer() {
+    this.setNodeTapListener();
+    this.setEdgeTapListener();
+    this.setMouseoverListener();
+  }
+
+  setupGameWithAI() {
+    this.setNodeTapListener(this.getAdversaryMoveByAI);
+    this.setMouseoverListener();
+  }
+
+  setMouseoverListener() {
+    this.cy.on('mouseover', 'edge', function(event) {
+      var edge = this;
+      var edgedetail = document.getElementById('edgedetail');
+      edgedetail.style.visibility = 'visible';
+      edgedetail.innerHTML = '<h4>Weight: ' + this.data('weight') + '</h4>Edge from ' + this.data('source') + ' to ' + this.data('target');
+    });
+  }
+
+  setNodeTapListener(cb) {
+    var that = this;
     this.cy.on('tap', 'node', function () {
-        var nodes = this;
+      var nodes = this;
 
-        if (that.turn === 1) {
-          utils.alertMessage('danger', 'Adversary turn')
-          return;
-        }
+      if (that.turn === 1) {
+        utils.alertMessage('danger', 'Adversary turn')
+        return;
+      }
 
 
-        if (that.testValidNode(nodes) === 0) {
-          utils.alertMessage('warning', 'This node is not a neighbor of current node ' + that.current);
-          return;
-        }
+      if (that.testValidNode(nodes) === 0) {
+        utils.alertMessage('warning', 'This node is not a neighbor of current node ' + that.current);
+        return;
+      }
 
-        if (that.testDestination(nodes) == 1) {
-          utils.alertMessage('success', 'You have reached destination');
-          return;
-        }
+      if (that.testDestination(nodes) == 1) {
+        utils.alertMessage('success', 'You have reached destination');
+        that.alternateRoles();
+        return;
+      }
 
-        that.turn = 1;
+      that.turn = 1;
 
-        that.cy.getElementById(that.current).removeClass('current');
-        neighbors.uncolor();
+      that.cy.getElementById(that.current).removeClass('current');
+      that.neighbors.uncolor();
 
-        this.removeClass('next');
-        that.current = this.data('id');
+      this.removeClass('next');
+      that.current = this.data('id');
 
-        neighbors = that.colorNeighbors();
-        this.removeClass('next');
-        this.addClass('current');
-      });
+      that.neighbors = that.colorNeighbors();
+      this.removeClass('next');
+      this.addClass('current');
 
+      if (that.playerType === player.AI) {
+        cb.call(that, that.current);
+      }
+    });
+  }
+
+  getAdversaryMoveByAI(playerPosition) {
+    let edge = ai.adversaryMove(playerPosition);
+    const edgeId = edge[0] + '_' + edge[1];
+    const el = this.cy.getElementById(edgeId);
+
+    this.doubleEdge(el);
+    this.turn = 0;
+  }
+
+  setEdgeTapListener() {
+    let that = this;
     this.cy.on('tap', 'edge', function (event) {
-        var edge = this;
+      var edge = this;
 
-        if (that.turn === 0) {
-          utils.alertMessage('danger', 'Player Turn');
-          return;
-        }
+      if (that.turn === 0) {
+        utils.alertMessage('danger', 'Player Turn');
+        return;
+      }
 
-        that.turn = 0;
-        var wt = edge.data('weight');
+      that.turn = 0;
+      that.doubleEdge(edge);
+    });
+  }
 
-        var src = edge.data('source');
-        var target = edge.data('target');
+  doubleEdge(edge) {
+    var wt = edge.data('weight');
 
-        var revEdge = that.cy.getElementById(target + '_' + src);
-        revEdge.data('weight', wt * 2);
+    var src = edge.data('source');
+    var target = edge.data('target');
 
-        edge.data('weight', wt * 2);
+    var revEdge = this.cy.getElementById(target + '_' + src);
+    revEdge.data('weight', wt * 2);
 
-        edge.style('width', wt * 2);
-        revEdge.style('width', wt * 2);
+    edge.data('weight', wt * 2);
 
-        var inter = window.setInterval(function () {
-          edge.toggleClass('next');
-        }, 1000);
+    edge.style('width', wt * 2);
+    revEdge.style('width', wt * 2);
 
-        window.setTimeout(function () {
-          window.clearInterval(inter);
-        }, 6000);
+    var inter = window.setInterval(function () {
+      edge.toggleClass('next');
+    }, 1000);
 
-        let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
+    window.setTimeout(function () {
+      window.clearInterval(inter);
+    }, 6000);
 
-        utils.alertMessage('success', msg);
+    let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
 
-      })
-
-      this.cy.on('mouseover', 'edge', function(event) {
-        var edge = this;
-        var edgedetail = document.getElementById('edgedetail');
-        edgedetail.style.visibility = 'visible';
-        edgedetail.innerHTML = '<h4>Weight: ' + this.data('weight') + '</h4>Edge from ' + this.data('source') + ' to ' + this.data('target');
-      });
-
+    utils.alertMessage('success', msg);
   }
 
   colorNeighbors() {

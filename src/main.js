@@ -7,11 +7,7 @@ function main(options) {
     options.currentGraph,
     utils.createElements,
     null,
-    (function () {
-      var args = Array.prototype.slice.call(arguments);
-      args.push(options);
-      layout.initialize.apply(layout, args);
-    })
+    layout.initialize.bind(layout)
   );
 }
 

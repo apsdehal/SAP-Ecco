@@ -6,8 +6,8 @@ class AI {
     this.g = {};
   }
 
-  initiaizeGraph(edges,nodes){
-    for(i=0; i<edges.length; i++){
+  initializeGraph(edges,nodes){
+    for(let i = 0; i < edges.length; i++){
       let target = edges[i].data.target;
       let source = edges[i].data.source;
 
@@ -48,16 +48,16 @@ class AI {
 
     // Logic here
     this.playerPosition = playerPosition;
-    let path = dijkistra();
+    let path = this.dijkistra();
     selectedSource = path[path.length-2];
     selectedTarget = path[path.length-1];
-    return {selectedSource, selectedTarget};
+    return [selectedSource, selectedTarget];
   }
 
   dijkistra(edge) {
     if (edge) {
       this.g[edge.data.source][edge.data.target] = edge.data.weight;
-      this.g[edge.data.target][edge.data.source] = edge.data.weight;      
+      this.g[edge.data.target][edge.data.source] = edge.data.weight;
     }
 
     const route = new Graph(this.g);
@@ -66,5 +66,5 @@ class AI {
   }
 }
 
-
-export {AI};
+let ai = new AI('0', '50');
+export {ai};

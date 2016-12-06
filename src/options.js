@@ -11,7 +11,7 @@ const graph = {
 class Options {
   constructor() {
     this.currentGraph = graph['LARGE_GRAPH'];
-    this.currentPlayer = player['HUMAN'];
+    this.currentPlayer = player['AI'];
   }
 
   setListeners(cb) {
@@ -23,7 +23,7 @@ class Options {
     const playerBtnGroup = document.getElementById('player-type-options');
     let that = this;
     playerBtnGroup.addEventListener('click', function(e) {
-      that.currentPlayer = graph[e.target.getAttribute('data-type')];
+      that.currentPlayer = player[e.target.getAttribute('data-type')];
       that.setClasses.call(that, e, cb);
     });
   }
@@ -52,4 +52,4 @@ class Options {
 }
 
 let options = new Options();
-export { options };
+export { options, player, graph };
