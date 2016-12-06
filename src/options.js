@@ -28,6 +28,7 @@ class Options {
     this.setPlayerTypeListener(cb);
     this.setGraphTypeListener(cb);
     this.setResetListener(cb);
+    this.setHelpListener();
   }
 
   setPlayerTypeListener(cb) {
@@ -69,6 +70,46 @@ class Options {
     e.target.classList.remove('btn-default');
     e.target.classList.add('btn-primary');
     cb(this)
+  }
+
+  setHelpListener() {
+    document.getElementById('help')
+    .addEventListener('click', function (e) {
+      let helperDiv = document.createElement('div');
+      let helperChildDiv = document.createElement('div');
+      helperDiv.style.cssText = 'z-index: 3; position: absolute; top: 0;' +
+      ' left: 0; right: 0; bottom: 0; width: 100%; display: flex;' +
+      'justify-content: center; align-items: center';
+
+      helperChildDiv.classList.add('bs-callout');
+      helperChildDiv.classList.add('bs-callout-info'); 
+
+      helperChildDiv.style.cssText = 'z-index: 3; width: 30%; height: 300px;' +
+      'background-color: rgb(256, 256, 256);';
+
+      helperDiv.appendChild(helperChildDiv);
+
+      let screen = document.createElement('div');
+      screen.style.cssText = 'z-index: 2; position: absolute; top: 0;' +
+      ' left:0; right:0; bottom: 0; background-color: rgba(220, 220, 220, 0.5)';
+
+      document.body.appendChild(helperDiv);
+      document.body.appendChild(screen);
+
+      window.setTimeout(() => {
+
+        document.body.addEventListener('click', function handler(e) {
+          if (e.target === helperChildDiv) {
+            e.stopPropagation();
+            return;
+          } else {
+            document.body.removeChild(helperDiv);
+            document.body.removeChild(screen);
+            document.body.removeEventListener(e.type, handler)
+          }
+        })
+      }, 1000);
+    });
   }
 }
 

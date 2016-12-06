@@ -110,8 +110,8 @@ class Layout {
       that.setPlayerScore.call(that, nodes);
 
       if (that.testDestination(nodes) == 1) {
-        if (that.version === 1) {
-          that.showWinner,call(that);
+        if (that.version) {
+          that.showWinner.call(that);
           return;
         }
         utils.alertMessage('success', 'You have reached destination');
