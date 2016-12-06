@@ -1,5 +1,6 @@
 import cytoscape from 'cytoscape';
 const { utils } = require('./utils').default;
+let { settings } = require('./settings');
 
 utils.loadJSON('data.json', utils.createElements, null, startCyto);
 
@@ -7,66 +8,8 @@ utils.loadJSON('data.json', utils.createElements, null, startCyto);
 function startCyto(edges, nodes) {
   var start = '1';
   var final = '50';
-  var cy = cytoscape({
-    container: document.getElementById('container'),
-    elements: {
-      nodes: nodes,
-
-      edges: edges
-    },
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'background-color': '#0072BB',
-          'label': 'data(id)',
-          'width': 25,
-          'height': 25,
-          'font-size': 20
-        }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'line-color': '#0072BB',
-          'width': '1',
-        }
-      },
-      {
-        selector: '.current',
-        style: {
-            'background-color': '#00FF00',
-            'line-color': '#61bffc',
-            'transition-property': 'background-color, line-color',
-            'transition-duration': '0.5s'
-        }
-      },
-      {
-        selector: '.next',
-        style: {
-            'background-color': '#FF4C3B',
-            'line-color': '#FF4C3B',
-            'transition-property': 'background-color, line-color',
-            'transition-duration': '0.5s'
-        }
-      },
-      {
-        selector: '.destination',
-        style: {
-            'background-color': '#FFCC00',
-            'line-color': '#61bffc',
-            'transition-property': 'background-color, line-color',
-            'transition-duration': '0.5s'
-        }
-      }
-    ],
-    layout: {
-      name: 'cose',
-      animate: true,
-      fit: true,
-      randomize: true
-    }
-  });
+  settings.elements = {edges, nodes};
+  var cy = cytoscape(settings);
 
   var current = start;
   cy.getElementById(final).addClass('destination');
