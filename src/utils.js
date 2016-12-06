@@ -1,6 +1,7 @@
 class Utils {
   constructor() {
-
+    this.timeout = null;
+    this.timeoutDuration = 5000;
   }
   loadJSON(path, success, error, cb) {
     let xhr = new XMLHttpRequest();
@@ -54,6 +55,21 @@ class Utils {
     });
 
     cb(edges, nodes);
+  }
+
+  alertMessage(type, msg) {
+    let msgDiv = document.getElementById('message');
+    msgDiv.className = 'slider';
+    msgDiv.style.visibility = 'visible';
+    msgDiv.classList.add('alert');
+    msgDiv.classList.add('alert-' + type);
+    msgDiv.textContent = msg;
+
+    window.clearTimeout(this.timeout);
+
+    this.timeout = window.setTimeout(() => {
+      msgDiv.classList.add('closed');
+    }, this.timeoutDuration);
   }
 }
 

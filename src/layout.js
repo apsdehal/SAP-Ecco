@@ -1,8 +1,10 @@
 let { settings } = require('./settings');
 import cytoscape from 'cytoscape';
+const { utils } = require('./utils').default;
 
 const start = '1';
 const final = '50';
+
 class Layout {
   constructor(st, fi) {
     this.cy = null;
@@ -28,33 +30,18 @@ class Layout {
         var nodes = this;
 
         if (that.turn === 1) {
-          var message = document.getElementById('message');
-          message.style.visibility = 'visible';
-          message.textContent = '';
-          window.setTimeout(function () {
-            message.textContent = 'Adversary turn';
-          }, 1000);
+          utils.alertMessage('danger', 'Adversary turn')
           return;
         }
 
 
         if (that.testValidNode(nodes) === 0) {
-          var message = document.getElementById('message');
-          message.style.visibility = 'visible';
-          message.textContent = '';
-          window.setTimeout(function () {
-            message.textContent = 'This node is not a neighbor of current node ' + that.current;
-          }, 1000);
+          utils.alertMessage('warning', 'This node is not a neighbor of current node ' + that.current);
           return;
         }
 
         if (that.testDestination(nodes) == 1) {
-          var message = document.getElementById('message');
-          message.style.visibility = 'visible';
-          message.textContent = '';
-          window.setTimeout(function () {
-            message.textContent = 'You have reached the destination';
-          }, 1000);
+          utils.alertMessage('success', 'You have reached destination');
           return;
         }
 
@@ -75,12 +62,7 @@ class Layout {
         var edge = this;
 
         if (that.turn === 0) {
-          var message = document.getElementById('message');
-          message.style.visibility = 'visible';
-          message.textContent = '';
-          window.setTimeout(function () {
-            message.textContent = 'Player turn';
-          }, 1000);
+          utils.alertMessage('danger', 'Player Turn');
           return;
         }
 
@@ -94,9 +76,6 @@ class Layout {
         revEdge.data('weight', wt * 2);
 
         edge.data('weight', wt * 2);
-        var message = document.getElementById('message');
-        message.style.visibility = 'visible';
-        message.textContent = '';
 
         edge.style('width', wt * 2);
         revEdge.style('width', wt * 2);
@@ -109,9 +88,9 @@ class Layout {
           window.clearInterval(inter);
         }, 6000);
 
-        window.setTimeout(function () {
-          message.textContent = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
-        }, 1000);
+        let msg = 'Adversary doubled edge ' + edge.data('source') + ' ' + edge.data('target') + ' to ' + edge.data('weight');
+
+        utils.alertMessage('success', msg);
 
       })
 
@@ -119,7 +98,7 @@ class Layout {
         var edge = this;
         var edgedetail = document.getElementById('edgedetail');
         edgedetail.style.visibility = 'visible';
-        edgedetail.innerHTML = 'Edge from ' + this.data('source') + ' to ' + this.data('target') + '<br/>Weight: ' + this.data('weight');
+        edgedetail.innerHTML = '<h4>Weight: ' + this.data('weight') + '</h4>Edge from ' + this.data('source') + ' to ' + this.data('target');
       });
 
   }
