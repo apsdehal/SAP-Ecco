@@ -15,13 +15,14 @@ class Layout {
     this.final = fi || final;
     this.turn = 0; // 0 = Player, 1 = adversary
     this.playerType = player.HUMAN;
-    this.settings = settings;
+    this.elements = {};
     this.version = 0;
   }
 
   initialize(edges, nodes) {
-    this.settings.elements = {edges, nodes};
-    this.cy = cytoscape(this.settings);
+    this.elements = {edges, nodes};
+    settings.elements = JSON.parse(JSON.stringify(this.elements));
+    this.cy = cytoscape(settings);
 
     ai.initializeGraph(edges, nodes);
 
@@ -59,7 +60,7 @@ class Layout {
     this.version = !this.version;
     utils.alertMessage('info', 'Roles will change now. You are ' + (this.version ? 'adversary' : 'player'));
 
-    this.initialize(this.settings.elements.edges, this.settings.elements.nodes);
+    this.initialize(this.elements.edges, this.elements.nodes);
   }
 
   setMouseoverListener() {
@@ -167,8 +168,8 @@ class Layout {
 
     edge.data('weight', wt * 2);
 
-    edge.style('width', wt * 2);
-    revEdge.style('width', wt * 2);
+    // edge.style('width', wt * 2);
+    // revEdge.style('width', wt * 2);
 
     window.clearInterval(this.inter);
     this.inter = window.setInterval(function () {
