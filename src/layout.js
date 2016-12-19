@@ -85,6 +85,30 @@ class Layout {
       + '</h4>Edge from ' + this.data('source') + ' to '
       + this.data('target');
     });
+
+    let throttle = 0;
+
+    this.cy.nodes().on('mouseover', function (event) {
+      let node = this;
+
+      if (event.cyTarget !== node)
+        return;
+
+      if (node.data('id') === '11' || node.data('id') === '37') {
+        return;
+      }
+
+      throttle = 1;
+      node.css({label: node.data('id')});
+      console.log('Hi');
+      window.setTimeout(function () {
+        node.css({label: ''});
+      }, 2000);
+
+      window.setTimeout(function () {
+        throttle = 0;
+      }, 200);
+    })
   }
 
   setNodeTapListener(cb) {

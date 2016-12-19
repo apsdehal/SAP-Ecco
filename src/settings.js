@@ -19,7 +19,7 @@ let settings = {
       selector: 'node',
       style: {
         'background-color': nodeBackgroundColor,
-        'label': 'data(id)',
+        'label': '',
         'width': 25,
         'height': 25,
         'font-size': 20
