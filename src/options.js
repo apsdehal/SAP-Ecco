@@ -91,7 +91,8 @@ class Options {
         '<p>- Player\'s goal is to reach destination by travelling minimum cost path.</p>' +
         '<p>- In each turn Adversary can double the cost of any edge.</p>' +
         '<p>- Hover over an edge to display its current cost.</p>' +
-        '<p>In each game you play two roles, first as "player" then as "adversary".' + 'Whoever uses smaller cost path from source to destination is the winner.</p>' +
+        '<p>In each game you play two roles, first as "player" then as "adversary".' +
+        'Whoever uses smaller cost path from source to destination is the winner.</p>' +
         '<p>Click outside of box to close</p>'
 
       helperChildDiv.style.cssText = 'z-index: 3; width: 600px; height: 300px;' +

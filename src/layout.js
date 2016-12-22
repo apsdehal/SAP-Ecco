@@ -100,7 +100,6 @@ class Layout {
 
       throttle = 1;
       node.css({label: node.data('id')});
-      console.log('Hi');
       window.setTimeout(function () {
         node.css({label: ''});
       }, 2000);
@@ -252,22 +251,42 @@ class Layout {
     let target = edge.data('target');
 
     let revEdge = this.cy.getElementById(target + '_' + src);
-    revEdge.data('weight', wt * 2);
-
-    edge.data('weight', wt * 2);
 
     // edge.style('width', wt * 2);
     // revEdge.style('width', wt * 2);
 
-    window.clearInterval(this.inter);
-    this.inter = window.setInterval(function () {
-      edge.toggleClass('next');
-    }, 1000);
+    // window.clearInterval(this.inter);
+    // this.inter = window.setInterval(function () {
+    //   edge.toggleClass('next');
+    // }, 1000);
+    //
+    // let that = this;
+    // window.setTimeout(function () {
+    //   window.clearInterval(that.inter);
+    // }, 6000);
 
-    let that = this;
-    window.setTimeout(function () {
-      window.clearInterval(that.inter);
-    }, 6000);
+    let originalWidth = edge.style('width');
+
+    edge.animate({
+      style: {
+        width: '20px'
+      }
+    }, {
+      duration: 2000,
+      complete: function () {
+        edge.animate({
+          style: {
+            width: originalWidth
+          }
+        }, {
+          duration: 2000
+        })
+      }
+    });
+
+    edge.data('weight', wt * 2);
+
+    revEdge.data('weight', wt * 2);
 
     let msg = 'Adversary doubled edge ' + edge.data('source')
     + ' ' + edge.data('target') + ' to ' + edge.data('weight');
