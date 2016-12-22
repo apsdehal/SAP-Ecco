@@ -273,12 +273,14 @@ class Layout {
       }
     }, {
       duration: 2000,
+      queue: true,
       complete: function () {
         edge.animate({
           style: {
             width: originalWidth
           }
         }, {
+          queue: true,
           duration: 2000
         })
       }
