@@ -11,7 +11,7 @@
 - `npm install`
 - `npm run dev` to run in development mode on `http::/localhost:8080`
 - `webpack` to build
-
+- `npm run lint` to lint the source code
 
 ## Tech Used
 
